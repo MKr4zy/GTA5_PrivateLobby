@@ -1,11 +1,17 @@
-Import-Module C:\Users\Administrator\OneDrive\Dokumente\GitHub\Scripte\pause-process.ps1
+Import-Module .\pause-process.ps1 -ErrorAction Stop
 
-$PIDS = get-Process -Name GTA5 | Select-Object Id 
-Write-Host "Dieses Script Privatisiert die Lobby in GTA 5"
-Write-Host "Pausiere Process GTA5.exe (PID: $($PIDS.Id))"
-pause-process $PIDS.Id
-Write-Host "Warte 10 Sekunden..."
-Start-Sleep -s 10
-Write-Host "Setze Prozess GTA5.exe fort.."
-unpause-process $PIDS.Id
-Write-Host "Lobby sollte jetzt Privat sein^^"
+$PIDS = get-Process -Name GTA5 | Select-Object Id
+
+if ($PIDS -ne $empty) {
+    Write-Host "This Script will 'empty' your GTA 5 Lobby"
+    Write-Host "Pausing process GTA5.exe (PID: $($PIDS.Id))"
+    foreach ($PID in $($PIDS.Id) ) { Pause-Process $PID }
+    Write-Host "Waiting 10 seconds..."
+    Start-Sleep -s 10
+    Write-Host "Countinuing GTA5.exe process.."
+    foreach ($PID in $($PIDS.Id) ) { Unpause-Process $PID }
+    Write-Host "Your Lobby should now be empty"
+}
+else {
+    Write-Host "Process GTA5.exe not found."
+}
